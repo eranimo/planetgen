@@ -1,52 +1,48 @@
-/// <reference path="../typings/babylon.d.ts" />
+interface Stop {
+  stop: number;
+  value: number;
+}
 
-module EDEN {
-  interface Stop {
-      stop: number;
-      value: number;
+export class Gradient {
+  stops: Array<Stop>;
+  resolution: number;
+
+  gradient: Array<number>;
+
+  constructor(resolution: number) {
+    this.stops = [];
+    this.resolution = resolution;
+
+    this.gradient = [];
   }
 
-  export class Gradient {
-    stops: Array<Stop>;
-    resolution: number;
+  addStop(stop: number, value: number) {
+    this.stops.push({
+      stop: stop,
+      value: value
+    });
+  }
 
-    gradient: Array<number>;
+  getValue(index: number) {
+    return this.gradient[Math.floor(index * (this.resolution - 1))];
+  }
 
-    constructor(resolution: number) {
-      this.stops = [];
-      this.resolution = resolution;
+  calculate() {
+    if(this.stops.length < 2) return;
 
-      this.gradient = [];
-    }
+    for(var stopIdx = 1; stopIdx < this.stops.length; stopIdx++) {
+      var currentStop = this.stops[stopIdx - 1];
+      var nextStop = this.stops[stopIdx];
 
-    addStop(stop: number, value: number) {
-      this.stops.push({
-        stop: stop,
-        value: value
-      });
-    }
+      var totalSteps = Math.ceil((nextStop.stop - currentStop.stop) * this.resolution);
+      var step = (nextStop.value - currentStop.value) / (totalSteps - 1);
 
-    getValue(index: number) {
-      return this.gradient[Math.floor(index * (this.resolution - 1))];
-    }
-
-    calculate() {
-      if(this.stops.length < 2) return;
-
-      for(var stopIdx = 1; stopIdx < this.stops.length; stopIdx++) {
-        var currentStop = this.stops[stopIdx - 1];
-        var nextStop = this.stops[stopIdx];
-
-        var totalSteps = Math.ceil((nextStop.stop - currentStop.stop) * this.resolution);
-        var step = (nextStop.value - currentStop.value) / (totalSteps - 1);
-
-        for(var i = 0; i < totalSteps; i++) {
-          var gradIdx = i + Math.ceil(currentStop.stop * this.resolution);
-          var val = currentStop.value + (step * i);
-          this.gradient[gradIdx] = val;
-        }
+      for(var i = 0; i < totalSteps; i++) {
+        var gradIdx = i + Math.ceil(currentStop.stop * this.resolution);
+        var val = currentStop.value + (step * i);
+        this.gradient[gradIdx] = val;
       }
     }
-
   }
+
 }

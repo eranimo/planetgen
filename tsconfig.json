@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/",
+    "noImplicitAny": false,
+    "module": "commonjs",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "es5",
+      "es6",
+      "esnext",
+      "scripthost"
+    ],
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/@turf/turf/index.d.ts",
+      "./typings/custom.d.ts",
+    ],
+    "esModuleInterop": true,
+    "paths": {
+      "three": ["node_modules/three/src/Three"],
+      "turf": ["node_modules/@turf/turf"]
+    }   
+  }
+}
